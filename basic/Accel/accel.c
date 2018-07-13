@@ -98,13 +98,13 @@ int32_t ACCEL_init(void)
     }
     
     // Set Activity/Inactivity Threshold
-    response = LIS3DH_SetActivThreshold(2);
+    response = LIS3DH_SetActivThreshold(5);     // 80 mg
     if(response == MEMS_ERROR){
         return -1;
     }
 
-    // Set Activity/Inactivity Duration
-    response = LIS3DH_SetActivDuration(50);
+    // Set Inactivity Duration
+    response = LIS3DH_SetActivDuration(100);    // About 4 s
     if(response == MEMS_ERROR){
         return -1;
     }
@@ -122,7 +122,46 @@ int32_t ACCEL_init(void)
     }
 
     // Set PowerMode 
+    response = LIS3DH_SetMode(LIS3DH_POWER_DOWN);
+    if(response == MEMS_ERROR){
+        return -1;
+    }
+
+    return 0;
+}
+
+/*****************************************************************
+ * @ bref       ACCEL_power_up
+ * @ param      none
+ * @ retval     0: Success -1: Error
+******************************************************************/
+int32_t ACCEL_power_up(void)
+{
+    status_t response;
+
+    // Set PowerMode 
     response = LIS3DH_SetMode(LIS3DH_NORMAL);
+    if(response == MEMS_ERROR){
+        return -1;
+    }
+
+    return 0;
+}
+
+/*****************************************************************
+ * @ bref       ACCEL_power_down
+ * @ param      none
+ * @ retval     0: Success -1: Error
+******************************************************************/
+int32_t ACCEL_power_down(void)
+{
+    status_t response;
+
+    // Wait twi idle
+    while(!nrf_twi_mngr_is_idle(&m_nrf_twi_mngr)){}
+
+    // Set PowerMode 
+    response = LIS3DH_SetMode(LIS3DH_POWER_DOWN);
     if(response == MEMS_ERROR){
         return -1;
     }

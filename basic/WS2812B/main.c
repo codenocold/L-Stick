@@ -17,43 +17,32 @@ int main(void)
 
     tColor color = {.R = 0, .G = 0, .B = 0,};
 
-    color.R = 100;
-    color.G = 0;
-    color.B = 0;
-    for(int i=0; i<16; i++){
-    	WS2812B_setColorRGB(&color, i, true);
-    }
-
-    nrf_delay_ms(3000);
-
-    color.R = 0;
-    color.G = 100;
-    color.B = 0;
-    for(int i=0; i<16; i++){
-    	WS2812B_setColorRGB(&color, i, true);
-    }
-
-    nrf_delay_ms(3000);
-
-    color.R = 0;
-    color.G = 0;
-    color.B = 100;
-    for(int i=0; i<16; i++){
-    	WS2812B_setColorRGB(&color, i, true);
-    }
-
-    nrf_delay_ms(3000);
-    
-    color.R = 0;
-    color.G = 0;
-    color.B = 0;
-    for(int i=0; i<16; i++){
-        WS2812B_setColorRGB(&color, i, true);
-    }
-
     while (true){
         nrf_delay_ms(1000);
+        color.R = 100;
+        color.G = 0;
+        color.B = 0;
+        for(int i=0; i<WS2812B_NUMLEDS; i++){
+            WS2812B_setColorRGB(&color, i, false);
+        }
+        WS2812B_update();
+        
+        nrf_delay_ms(1000);
+        color.R = 0;
+        color.G = 100;
+        color.B = 0;
+        for(int i=0; i<WS2812B_NUMLEDS; i++){
+            WS2812B_setColorRGB(&color, i, false);
+        }
+        WS2812B_update();
 
-        NRF_LOG_DEBUG("Hello World");
+        nrf_delay_ms(1000);
+        color.R = 0;
+        color.G = 0;
+        color.B = 100;
+        for(int i=0; i<WS2812B_NUMLEDS; i++){
+            WS2812B_setColorRGB(&color, i, false);
+        }
+        WS2812B_update();
     }
 }

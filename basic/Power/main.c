@@ -5,6 +5,12 @@
 #include "nrfx_saadc.h"
 #include "nrfx_ppi.h"
 #include "nrfx_timer.h"
+#include "nrf_gpio.h"
+
+
+#define POWER_LOCK_PIN  6
+#define CHRG_STATE_PIN  3
+#define CHRG_STDBY_PIN  4
 
 
 #define ADC_2_MILIVOLT(ADC)   (ADC*1000/4551)
@@ -31,7 +37,10 @@ void saadc_callback(nrfx_saadc_evt_t const * p_event)
         }else{
             err_code = nrfx_saadc_buffer_convert(&saadc_value, 1);
             APP_ERROR_CHECK(err_code);
-            NRF_LOG_INFO("milivolt: %d mV", ADC_2_MILIVOLT(p_event->data.done.p_buffer[0]));
+
+            int16_t adc_val = ADC_2_MILIVOLT(p_event->data.done.p_buffer[0]);
+            int16_t bat_val = adc_val * 2;
+            NRF_LOG_INFO("ADC milivolt: %d mV, Battery: %d mV", adc_val, bat_val);
         }
     }
 }
@@ -46,7 +55,7 @@ void saadc_init(void)
         .low_power_mode     = false,  
     };
 
-    nrf_saadc_channel_config_t channel_config = {                                                   \
+    nrf_saadc_channel_config_t channel_config = {
         .resistor_p = NRF_SAADC_RESISTOR_DISABLED,
         .resistor_n = NRF_SAADC_RESISTOR_DISABLED,
         .gain       = NRF_SAADC_GAIN1_6,
@@ -115,6 +124,7 @@ void saadc_sampling_event_enable(void)
     APP_ERROR_CHECK(err_code);
 }
 
+
 /**
  * @brief Function for application main entry.
  */
@@ -123,11 +133,40 @@ int main(void)
     NRF_LOG_INIT(NULL);
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 
+    // Config Power lock pin
+    nrf_gpio_cfg_output(POWER_LOCK_PIN);
+
+    // Config charging state pin
+    nrf_gpio_cfg_input(CHRG_STATE_PIN, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(CHRG_STDBY_PIN, NRF_GPIO_PIN_PULLUP);
+
+    // Config Battery ADC
     saadc_init();
     saadc_sampling_event_init();
     saadc_sampling_event_enable();
 
-    while (true){
+    int cnt = 0;
 
+    // Lock Power supply
+    nrf_gpio_pin_set(POWER_LOCK_PIN);
+
+    while (true){
+        nrf_delay_ms(1000);
+
+        if(nrf_gpio_pin_read(CHRG_STATE_PIN) && nrf_gpio_pin_read(CHRG_STDBY_PIN)){
+            NRF_LOG_DEBUG("No Charger")
+        }else if(!nrf_gpio_pin_read(CHRG_STATE_PIN) && nrf_gpio_pin_read(CHRG_STDBY_PIN)){
+            NRF_LOG_DEBUG("Charging")
+        }else if(nrf_gpio_pin_read(CHRG_STATE_PIN) && !nrf_gpio_pin_read(CHRG_STDBY_PIN)){
+            NRF_LOG_DEBUG("Charging Complete")
+        }
+
+        if(cnt < 20){
+            cnt ++;
+        }else if(cnt == 20){
+            cnt ++;
+            // Unlock Power supply
+            nrf_gpio_pin_clear(POWER_LOCK_PIN);
+        }
     }
 }

@@ -26,5 +26,7 @@ int main(void)
         if(keyIndex){
             NRF_LOG_DEBUG("KEY: %d", keyIndex);
         }
+
+        if()
     }
 }
