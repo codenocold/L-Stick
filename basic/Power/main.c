@@ -2,6 +2,7 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
+
 #include "nrfx_saadc.h"
 #include "nrfx_ppi.h"
 #include "nrfx_timer.h"
@@ -154,11 +155,11 @@ int main(void)
         nrf_delay_ms(1000);
 
         if(nrf_gpio_pin_read(CHRG_STATE_PIN) && nrf_gpio_pin_read(CHRG_STDBY_PIN)){
-            NRF_LOG_DEBUG("No Charger")
+            // No Charger
         }else if(!nrf_gpio_pin_read(CHRG_STATE_PIN) && nrf_gpio_pin_read(CHRG_STDBY_PIN)){
-            NRF_LOG_DEBUG("Charging")
+            // Charging
         }else if(nrf_gpio_pin_read(CHRG_STATE_PIN) && !nrf_gpio_pin_read(CHRG_STDBY_PIN)){
-            NRF_LOG_DEBUG("Charging Complete")
+            // Charging Complete
         }
 
         if(cnt < 20){

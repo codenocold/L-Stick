@@ -2,7 +2,7 @@
 
 一次偶然的机会在kickstarter上看到一款智能灯棒**M·Stick**
 
-![](doc/img/MStick.jpg)
+![](./img/MStick.jpg)
 
 感觉挺有意思想买一个，马上在亚马逊和淘宝上看了一下，发现这小东西竟然要400块RMB，然后就没有买。
 
@@ -12,7 +12,7 @@
 
 **L-Stick**的PCB正反面
 
-![](doc/img/L-Stick_T&B.png "32432")
+![](./img/L-Stick_T&B.png "32432")
 
 **L-Stick**硬件电路主要有以下部分：
 
