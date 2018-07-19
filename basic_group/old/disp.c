@@ -11,35 +11,71 @@
 
 /*****************************************************************************
  * @bref        Function for add back to the buf.
- * @param[in]   r
- * @param[in]   g
- * @param[in]   b
+ * @param[in]   hsv
  * @retval      none
  *****************************************************************************/
-void DISP_add_back(uint8_t r, uint8_t g, uint8_t b)
+void DISP_add_back(tHSV hsv)
 {
-    tColor color;
+    tRGB rgb;
 
-    color.R = r;
-    color.G = g;
-    color.B = b;
+    DISP_hsv2rgb(&hsv, &rgb);
 
     for(int i=0; i<WS2812B_NUMLEDS; i++){
-        WS2812B_setColorRGB(&color, i, false);
+        WS2812B_setColorRGB(&rgb, i, false);
     }
 }
 
 /*****************************************************************************
  * @bref        Function for add point to the buf.
- * @param[in]   r
- * @param[in]   g
- * @param[in]   b
+ * @param[in]   hsv
  * @param[in]   pointSize     (0~15000)
  * @param[in]   pointCG       (0~1000 )
  * @param[in]   pointPosition (0~15000) LE0~LED15
  * @retval      none
  *****************************************************************************/
-void DISP_add_point(uint8_t r, uint8_t g, uint8_t b, int pointSize, int pointCG, int pointPosition)
+void DISP_add_point(tHSV hsv, int pointSize, int pointCG, int pointPosition)
+{
+    tRGB rgb;
+    tHSV hsv_tmp = hsv;
+    int index;
+    int sub;
+
+    int start;
+    int end;
+
+    start = (pointPosition - pointSize/2);
+    index = start / 1000;
+    sub = start % 1000;
+    sub = 1000 - sub;
+    hsv_tmp.V = sub * 
+    if(sub != 0){
+        start = hsv.V - pointSize * sub/1000;
+        end   = hsv.V - pointSize * (1000-sub)/1000;
+    }
+
+    hsv_tmp.V = start;
+    for(int i = index; i>=0; i--){
+        DISP_hsv2rgb(&hsv_tmp, &rgb);
+        WS2812B_setColorRGB(&rgb, i, false);
+        if(hsv_tmp.V > pointPosition){
+            hsv_tmp.V -= pointPosition;
+        }else{
+            break;
+        }
+    }
+
+    hsv_tmp.V = end;
+    for(int i = index; i<16; i++){
+        DISP_hsv2rgb(&hsv_tmp, &rgb);
+        WS2812B_setColorRGB(&rgb, i, false);
+        if(hsv_tmp.V > pointPosition){
+            hsv_tmp.V -= pointPosition;
+        }else{
+            break;
+        }
+    }
+}
+
 {
     int pose;
     int spl;
@@ -85,7 +121,7 @@ void DISP_add_point(uint8_t r, uint8_t g, uint8_t b, int pointSize, int pointCG,
     }
 }
 
-void DISP_rgb2hsv(tColor *pRGB, tHSV *pHSV)
+void DISP_rgb2hsv(tRGB *pRGB, tHSV *pHSV)
 {
     uint8_t max, min, delta;
 
@@ -123,7 +159,7 @@ void DISP_rgb2hsv(tColor *pRGB, tHSV *pHSV)
     }
 }
 
-void DISP_hsv2rgb(tHSV *pHSV, tColor *pRGB)  
+void DISP_hsv2rgb(tHSV *pHSV, tRGB *pRGB)  
 {
     uint8_t sec;
     uint8_t RGB_min;

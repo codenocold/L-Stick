@@ -6,6 +6,7 @@
 #include "ws2812b.h"
 #include "disp.h"
 
+
 /**
  * @brief Function for application main entry.
  */
@@ -16,10 +17,11 @@ int main(void)
 
     WS2812B_init();
 
-    //tColor color = {.R = 0, .G = 0, .B = 0,};
+    tHSV hsv_back = {.H = 100, .S = 255, .V = 0};
+    DISP_add_back(hsv_back);
 
-    DISP_add_back(0, 0, 0);
-    DISP_add_point(200, 200, 200, 5000, 1000, 7500);
+    tHSV hsv_point = {.H = 0, .S = 255, .V = 255};
+    DISP_add_point(hsv_point, 10, 500, 7500);
     DISP_update();
 
     while (true){

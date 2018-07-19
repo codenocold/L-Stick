@@ -63,12 +63,12 @@ void WS2812B_init(void)
 
 /*****************************************************************************
  * @bref        Set a led color
- * @param[in]   pColor led color ptr
+ * @param[in]   pRGB led color ptr
  * @param[in]   led led number
  * @param[in]   update Perform an update after changing led color
  * @retval      none
  *****************************************************************************/
-void WS2812B_setColorRGB(tColor* pColor, uint8_t led, bool update)
+void WS2812B_setColorRGB(tRGB* pRGB, uint8_t led, bool update)
 {
     if((led >= WS2812B_NUMLEDS)){
         return;
@@ -76,7 +76,7 @@ void WS2812B_setColorRGB(tColor* pColor, uint8_t led, bool update)
 
     int offset   = led * WS2812B_BITS_PER_LED;
 
-    uint32_t grb = (pColor->G << 16) | (pColor->R << 8) | (pColor->B);
+    uint32_t grb = (pRGB->G << 16) | (pRGB->R << 8) | (pRGB->B);
 
     for (int bit = (WS2812B_BITS_PER_LED - 1); bit >= 0; --bit) {
         seq1_values[offset++] = (grb & (1 << bit)) ? LOGIC_ONE : LOGIC_ZERO;
@@ -90,11 +90,11 @@ void WS2812B_setColorRGB(tColor* pColor, uint8_t led, bool update)
 /*****************************************************************************
  * @bref        Get a led color
  * @param[in]   led led number
- * @retval      Color
+ * @retval      tRGB
  *****************************************************************************/
-tColor WS2812B_getColorRGB(uint8_t led)
+tRGB WS2812B_getColorRGB(uint8_t led)
 {
-    tColor color;
+    tRGB RGB;
     uint32_t grb = 0;
     
     if((led >= WS2812B_NUMLEDS)){
@@ -109,11 +109,11 @@ tColor WS2812B_getColorRGB(uint8_t led)
         }
     }
 
-    color.R = (grb>>8) & 0xFF;
-    color.G = (grb>>16) & 0xFF;
-    color.B = grb & 0xFF;
+    RGB.R = (grb>>8) & 0xFF;
+    RGB.G = (grb>>16) & 0xFF;
+    RGB.B = grb & 0xFF;
 
-    return color;
+    return RGB;
 }
 
 /*****************************************************************************
