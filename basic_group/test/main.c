@@ -26,7 +26,7 @@ void fill_rainbow(uint8_t initialhue, uint8_t deltahue)
     hsv.V = 255;
     hsv.S = 240;
     for( int i = 0; i < WS2812B_NUMLEDS; i++) {
-        hsv2rgb(&hsv, &rgb);
+        hsv2rgb_rainbow(&hsv, &rgb);
         WS2812B_setColorRGB(&rgb, i, false);
         hsv.H += deltahue;
     }
@@ -47,7 +47,7 @@ void addGlitter(uint8_t chanceOfGlitter)
     }
 }
 
-void confetti() 
+void confetti(void)
 {
     static int cnt = 0;
     tRGB rgb;
@@ -70,6 +70,26 @@ void confetti()
     }
 }
 
+void nscale8( tRGB * rgb, uint8_t num_leds, uint8_t scale)
+{
+    for( uint8_t i = 0; i < num_leds; i++) {
+        rgb->R = scale8(rgb->R, scale);
+        rgb->G = scale8(rgb->G, scale);
+        rgb->B = scale8(rgb->B, scale);
+    }
+}
+
+void fadeToBlackBy( tRGB * rgb, uint16_t num_leds, uint8_t fadeBy)
+{
+    nscale8( rgb, num_leds, 255 - fadeBy);
+}
+
+
+void rainbow();
+void rainbowWithGlitter(void);
+
+
+uint8_t Hue = 0;
 
 int main(void)
 {
@@ -78,15 +98,42 @@ int main(void)
 
     WS2812B_init();
 
-    uint8_t Hue = 0;
+    
 
     while (true){
+        //rainbow();
+        //rainbowWithGlitter();
         confetti();
 
         WS2812B_update();
-
         nrf_delay_ms(10);
-
         Hue ++;
     }
+}
+
+void rainbow(void) 
+{
+    fill_rainbow(Hue, 7);
+}
+
+void rainbowWithGlitter(void) 
+{
+    // built-in FastLED rainbow, plus some random sparkly glitter
+    rainbow();
+    addGlitter(80);
+}
+
+void sinelon()
+{
+    // a colored dot sweeping back and forth, with fading trails
+    tRGB rgb;
+
+    for( int i = 0; i < WS2812B_NUMLEDS; i++) {
+        rgb = WS2812B_getColorRGB(i);
+        fadeToBlackBy( &rgb, 1, 20);
+        WS2812B_setColorRGB(&rgb, i, false);
+    }
+
+    int pos = beatsin16( 13, 0, NUM_LEDS-1 );
+    leds[pos] += CHSV( gHue, 255, 192);
 }

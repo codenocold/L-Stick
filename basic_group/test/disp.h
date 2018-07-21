@@ -156,10 +156,18 @@ static const tRGB HighPressureSodium = {0xFF, 0xB7, 0x4C}; /* 0 K, 255, 183, 76 
 tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlendType blendType);
 
 void hsv2rgb(const tHSV * hsv, tRGB * rgb);
+void hsv2rgb_rainbow(const tHSV * hsv, tRGB * rgb);
 
 static inline uint8_t scale8( uint8_t i, uint8_t scale)
 {
     return ((int)i * (int)(scale) ) >> 8;
+}
+
+static inline uint8_t scale8_video( uint8_t i, uint8_t scale)
+{
+	uint8_t j = (((int)i * (int)scale) >> 8) + ((i&&scale)?1:0);
+
+	return j;
 }
 
 

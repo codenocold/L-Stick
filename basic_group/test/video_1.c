@@ -17,7 +17,7 @@ void fadeall()
         rgb = WS2812B_getColorRGB(i);
         scale_rgb(&rgb, 250);
         WS2812B_setColorRGB(&rgb, i, false);
-    } 
+    }
 }
 
 int main(void)
