@@ -28,8 +28,8 @@ SRC_FILES += \
   $(SDK_ROOT)/external/fprintf/nrf_fprintf.c \
   $(SDK_ROOT)/external/fprintf/nrf_fprintf_format.c \
   \
-  $(PROJ_DIR)/disp.c \
-  $(PROJ_DIR)/ws2812b.c \
+  $(PROJ_DIR)/led.c \
+  $(PROJ_DIR)/systick.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_pwm.c \
   $(SDK_ROOT)/components/libraries/util/app_error.c \
   $(SDK_ROOT)/components/libraries/util/app_error_weak.c \
@@ -55,6 +55,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/external/fprintf \
   $(SDK_ROOT)/external/segger_rtt \
   \
+  $(SDK_ROOT)/modules/nrfx/hal/ \
   $(SDK_ROOT)/modules/nrfx/drivers/include/ \
 
 

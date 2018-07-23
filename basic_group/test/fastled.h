@@ -1,23 +1,11 @@
-#ifndef _DISP_H_
-#define _DISP_H_
+#ifndef _FASTLED_H_
+#define _FASTLED_H_
 
 
 #include "nrf.h"
-#include "ws2812b.h"
 
 
-
-// void DISP_add_back(tHSV hsv);
-
-// static inline void DISP_update(void){WS2812B_update();}
-
-// void DISP_rgb2hsv(tRGB *pRGB, tHSV *pHSV);
-
-// void DISP_hsv2rgb(tHSV *pHSV, tRGB *pRGB);
-
-
-
-static const tRGB HeatColors_p[] = {
+static const tRGB PaletteHeatColors_p[] = {
     {0x00, 0x00, 0x00}, 
     {0x33, 0x00, 0x00}, 
     {0x66, 0x00, 0x00}, 
@@ -36,7 +24,7 @@ static const tRGB HeatColors_p[] = {
     {0xFF, 0xFF, 0xFF},
 };
 
-static const tRGB RainbowColors_p[] = {
+static const tRGB PaletteRainbowColors_p[] = {
     {0xFF, 0x00, 0x00},
     {0xD5, 0x2A, 0x00},
     {0xAB, 0x55, 0x00},
@@ -55,7 +43,7 @@ static const tRGB RainbowColors_p[] = {
     {0xD5, 0x00, 0x2B},
 };
 
-static const tRGB RainbowStripeColors_p[] = {
+static const tRGB PaletteRainbowStripeColors_p[] = {
 	{0xFF, 0x00, 0x00}, 
 	{0x00, 0x00, 0x00}, 
 	{0xAB, 0x55, 0x00}, 
@@ -74,7 +62,7 @@ static const tRGB RainbowStripeColors_p[] = {
     {0x00, 0x00, 0x00}
 };
 
-static const tRGB CloudColors_p[] = {
+static const tRGB PaletteCloudColors_p[] = {
     {0x00, 0x00, 0xFF},
     {0x00, 0x00, 0x8B},
     {0x00, 0x00, 0x8B},
@@ -93,7 +81,7 @@ static const tRGB CloudColors_p[] = {
     {0x00, 0xBF, 0xFF},
 };
 
-static const tRGB PartyColors_p[] = {
+static const tRGB PalettePartyColors_p[] = {
     {0x55, 0x00, 0xAB},
 	{0x84, 0x00, 0x7C},
 	{0xB5, 0x00, 0x4B},
@@ -112,7 +100,7 @@ static const tRGB PartyColors_p[] = {
 	{0x00, 0x07, 0xF9},
 };
 
-static const tRGB RedBlue_p[] = {
+static const tRGB PaletteRedBlue_p[] = {
     {0xFF, 0x00, 0x00},
 	{0xFF, 0x00, 0x00},
 	{0x00, 0x00, 0x00},
@@ -131,51 +119,13 @@ static const tRGB RedBlue_p[] = {
 	{0x00, 0x00, 0x00},
 };
 
+
 typedef enum eBlendType{ 
 	NOBLEND=0, 
 	LINEARBLEND=1 
 } tBlendType;
 
 
-/// 1900 Kelvin
-static const tRGB Candle = {0xFF, 0x93, 0x29}; /* 1900 K, 255, 147, 41 */
-/// 2600 Kelvin
-static const tRGB Tungsten40W = {0xFF, 0xC5, 0x8F}; /* 2600 K, 255, 197, 143 */
-/// 2850 Kelvin
-static const tRGB Tungsten100W = {0xFF, 0xD6, 0xAA}; /* 2850 K, 255, 214, 170 */
-/// 3200 Kelvin
-static const tRGB Halogen = {0xFF, 0xF1, 0xE0}; /* 3200 K, 255, 241, 224 */
-/// 5200 Kelvin
-static const tRGB CarbonArc = {0xFF, 0xFA, 0xF4}; /* 5200 K, 255, 250, 244 */
-/// 5400 Kelvin
-static const tRGB HighNoonSun = {0xFF, 0xFF, 0xFB}; /* 5400 K, 255, 255, 251 */
-/// 6000 Kelvin
-static const tRGB DirectSunlight = {0xFF, 0xFF, 0xFF}; /* 6000 K, 255, 255, 255 */
-/// 7000 Kelvin
-static const tRGB OvercastSky = {0xC9, 0xE2, 0xFF}; /* 7000 K, 201, 226, 255 */
-/// 20000 Kelvin
-static const tRGB ClearBlueSky = {0x40, 0x9C, 0xFF}; /* 20000 K, 64, 156, 255 */
-
-/// @name Gaseous light sources
-/// Gaseous light sources emit discrete spectral bands, and while we can
-/// approximate their aggregate hue with RGB values, they don't actually
-/// have a proper Kelvin temperature.
-static const tRGB WarmFluorescent = {0xFF, 0xF4, 0xE5}; /* 0 K, 255, 244, 229 */
-static const tRGB StandardFluorescent = {0xF4, 0xFF, 0xFA}; /* 0 K, 244, 255, 250 */
-static const tRGB CoolWhiteFluorescent = {0xD4, 0xEB, 0xFF}; /* 0 K, 212, 235, 255 */
-static const tRGB FullSpectrumFluorescent = {0xFF, 0xF4, 0xF2}; /* 0 K, 255, 244, 242 */
-static const tRGB GrowLightFluorescent = {0xFF, 0xEF, 0xF7}; /* 0 K, 255, 239, 247 */
-static const tRGB BlackLightFluorescent = {0xA7, 0x00, 0xFF}; /* 0 K, 167, 0, 255 */
-static const tRGB MercuryVapor = {0xD8, 0xF7, 0xFF}; /* 0 K, 216, 247, 255 */
-static const tRGB SodiumVapor = {0xFF, 0xD1, 0xB2}; /* 0 K, 255, 209, 178 */
-static const tRGB MetalHalide = {0xF2, 0xFC, 0xFF}; /* 0 K, 242, 252, 255 */
-static const tRGB HighPressureSodium = {0xFF, 0xB7, 0x4C}; /* 0 K, 255, 183, 76 */
-
-
-tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlendType blendType);
-
-void hsv2rgb(const tHSV * hsv, tRGB * rgb);
-void hsv2rgb_rainbow(const tHSV * hsv, tRGB * rgb);
 
 static inline uint8_t scale8( uint8_t i, uint8_t scale)
 {
@@ -185,7 +135,6 @@ static inline uint8_t scale8( uint8_t i, uint8_t scale)
 static inline uint8_t scale8_video( uint8_t i, uint8_t scale)
 {
 	uint8_t j = (((int)i * (int)scale) >> 8) + ((i&&scale)?1:0);
-
 	return j;
 }
 

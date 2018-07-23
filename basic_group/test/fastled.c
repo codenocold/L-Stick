@@ -1,4 +1,11 @@
-#include "disp.h"
+#include "fastled.h"
+
+
+
+#define K255 255
+#define K171 171
+#define K170 170
+#define K85  85
 
 
 //----------------------------------------------------------------------------------
@@ -7,117 +14,6 @@
 
 //----------------------------------------------------------------------------------
 // Function Declarations
-
-
-// /*****************************************************************************
-//  * @bref        Function for add back to the buf.
-//  * @param[in]   hsv
-//  * @retval      none
-//  *****************************************************************************/
-// void DISP_add_back(tHSV hsv)
-// {
-//     tRGB rgb;
-
-//     DISP_hsv2rgb(&hsv, &rgb);
-
-//     for(int i=0; i<WS2812B_NUMLEDS; i++){
-//         WS2812B_setColorRGB(&rgb, i, false);
-//     }
-// }
-
-// void DISP_rgb2hsv(tRGB *pRGB, tHSV *pHSV)
-// {
-//     uint8_t max, min, delta;
-
-//     max = pRGB->R > pRGB->G ? pRGB->R : pRGB->G;
-//     if(max < pRGB->B){
-//         max = pRGB->B;
-//     }
-
-//     min = pRGB->R < pRGB->G ? pRGB->R : pRGB->G;
-//     if(min > pRGB->B){
-//         min = pRGB->B;
-//     }
-
-//     delta = max - min;
-
-//     pHSV->V = max;
-
-//     if(delta == 0){      
-//         pHSV->H = 0; 
-//         pHSV->S = 0; 
-//     }else{
-//         pHSV->S = 255 * delta / max;
-
-//         if(pRGB->R == max){
-//             pHSV->H = 60 * (pRGB->G - pRGB->B) / delta;
-//         }else if(pRGB->G == max){
-//             pHSV->H = 120 + 60 * (pRGB->B - pRGB->R) / delta;
-//         }else{
-//             pHSV->H = 240 + 60 * (pRGB->R - pRGB->G) / delta;
-//         }
-
-//         if(pHSV->H < 0){
-//             pHSV->H += 360;
-//         }
-//     }
-// }
-
-// void DISP_hsv2rgb(tHSV *pHSV, tRGB *pRGB)  
-// {
-//     uint8_t sec;
-//     uint8_t RGB_min;
-//     uint8_t RGB_adj;
-//     uint16_t Hue = pHSV->H * 1.4f;
-
-//     sec = Hue / 60;
-//     RGB_min = pHSV->V * (255 - pHSV->S) / 255;     
-
-//     // RGB adjustment amount by hue   
-//     RGB_adj = (pHSV->V - RGB_min) * (Hue % 60) / 60;  
-  
-//     switch(sec){  
-//         case 0:  
-//             pRGB->R = pHSV->V;  
-//             pRGB->G = RGB_min + RGB_adj;  
-//             pRGB->B = RGB_min;  
-//             break;
-
-//         case 1:  
-//             pRGB->R = pHSV->V - RGB_adj;  
-//             pRGB->G = pHSV->V;  
-//             pRGB->B = RGB_min;  
-//             break;
-
-//         case 2:  
-//             pRGB->R = RGB_min;  
-//             pRGB->G = pHSV->V;  
-//             pRGB->B = RGB_min + RGB_adj;  
-//             break;
-
-//         case 3:  
-//             pRGB->R = RGB_min;  
-//             pRGB->G = pHSV->V - RGB_adj;  
-//             pRGB->B = pHSV->V;  
-//             break;
-
-//         case 4:  
-//             pRGB->R = RGB_min + RGB_adj;  
-//             pRGB->G = RGB_min;  
-//             pRGB->B = pHSV->V;  
-//             break;
-
-//         default:        // case 5:  
-//             pRGB->R = pHSV->V;  
-//             pRGB->G = RGB_min;  
-//             pRGB->B = pHSV->V - RGB_adj;  
-//             break;  
-//     }
-// }
-
-
-
-
 
 
 tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlendType blendType)
@@ -188,15 +84,7 @@ tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlen
     return rgb;
 }
 
-
-
-
-#define K255 255
-#define K171 171
-#define K170 170
-#define K85  85
-
-void hsv2rgb_rainbow(const tHSV * hsv, tRGB * rgb)
+void hsv2rgb(const tHSV * hsv, tRGB * rgb)
 {
     // Yellow has a higher inherent brightness than
     // any other color; 'pure' yellow is perceived to
