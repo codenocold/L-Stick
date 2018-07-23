@@ -1,12 +1,6 @@
 #include "fastled.h"
 
 
-#define K255 255
-#define K171 171
-#define K170 170
-#define K85  85
-
-
 //----------------------------------------------------------------------------------
 // Varable Definitions
 
@@ -14,6 +8,23 @@
 //----------------------------------------------------------------------------------
 // Function Declarations
 
+
+void fadeToBlackBy( tRGB * leds, uint8_t num_leds, uint8_t fadeBy)
+{
+    for(int i = 0; i < num_leds; i++) { 
+        rgb_scale(&leds[i], 255 - fadeBy);
+    }
+}
+
+void addGlitter(uint8_t chanceOfGlitter, tRGB color) 
+{
+    uint8_t index;
+
+    if( random8() < chanceOfGlitter) {
+        index = random8() % LED_NUM;
+        rgb_add(&gLED[index], color);
+    }
+}
 
 tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlendType blendType)
 {
@@ -128,22 +139,22 @@ void hsv2rgb(const tHSV * hsv, tRGB * rgb)
             if( ! (hue & 0x20) ) {
                 // 000
                 //case 0: // R -> O
-                r = K255 - third;
+                r = 255 - third;
                 g = third;
                 b = 0;
             } else {
                 // 001
                 //case 1: // O -> Y
                 if( Y1 ) {
-                    r = K171;
-                    g = K85 + third ;
+                    r = 171;
+                    g = 85 + third ;
                     b = 0;
                 }
                 if( Y2 ) {
-                    r = K170 + third;
+                    r = 170 + third;
                     //uint8_t twothirds = (third << 1);
                     uint8_t twothirds = scale8( offset8, ((256 * 2) / 3)); // max=170
-                    g = K85 + twothirds;
+                    g = 85 + twothirds;
                     b = 0;
                 }
             }
@@ -156,20 +167,20 @@ void hsv2rgb(const tHSV * hsv, tRGB * rgb)
                 if( Y1 ) {
                     //uint8_t twothirds = (third << 1);
                     uint8_t twothirds = scale8( offset8, ((256 * 2) / 3)); // max=170
-                    r = K171 - twothirds;
-                    g = K170 + third;
+                    r = 171 - twothirds;
+                    g = 170 + third;
                     b = 0;
                 }
                 if( Y2 ) {
-                    r = K255 - offset8;
-                    g = K255;
+                    r = 255 - offset8;
+                    g = 255;
                     b = 0;
                 }
             } else {
                 // 011
                 // case 3: // G -> A
                 r = 0;
-                g = K255 - third;
+                g = 255 - third;
                 b = third;
             }
         }
@@ -184,31 +195,31 @@ void hsv2rgb(const tHSV * hsv, tRGB * rgb)
                 r = 0;
                 //uint8_t twothirds = (third << 1);
                 uint8_t twothirds = scale8( offset8, ((256 * 2) / 3)); // max=170
-                g = K171 - twothirds; //K170?
-                b = K85  + twothirds;
+                g = 171 - twothirds; //170?
+                b = 85  + twothirds;
                 
             } else {
                 // 101
                 //case 5: // B -> P
                 r = third;
                 g = 0;
-                b = K255 - third;
+                b = 255 - third;
                 
             }
         } else {
             if( !  (hue & 0x20)  ) {
                 // 110
                 //case 6: // P -- K
-                r = K85 + third;
+                r = 85 + third;
                 g = 0;
-                b = K171 - third;
+                b = 171 - third;
                 
             } else {
                 // 111
                 //case 7: // K -> R
-                r = K170 + third;
+                r = 170 + third;
                 g = 0;
-                b = K85 - third;
+                b = 85 - third;
                 
             }
         }
@@ -262,7 +273,43 @@ void hsv2rgb(const tHSV * hsv, tRGB * rgb)
     rgb->B = b;
 }
 
-void scale_rgb(tRGB * rgb, uint8_t scale)
+uint8_t qadd8( uint8_t i, uint8_t j)
+{
+    unsigned int t = i + j;
+    if( t > 255) t = 255;
+    return t;
+}
+
+uint8_t qsub8( uint8_t i, uint8_t j)
+{
+    int t = i - j;
+    if( t < 0)
+        t = 0;
+    return t;
+}
+
+uint8_t random8(void)
+{
+    static uint16_t rand16seed = 1337;
+    rand16seed = (rand16seed * 2053) + 13849;
+    return (uint8_t)(((uint8_t)(rand16seed & 0xFF)) + ((uint8_t)(rand16seed >> 8)));
+}
+
+uint8_t random8_1(uint8_t lim)
+{
+    uint8_t r = random8();
+    r = (r*lim) >> 8;
+    return r;
+}
+
+uint8_t random8_2(uint8_t min, uint8_t lim)
+{
+    uint8_t delta = lim - min;
+    uint8_t r = random8_1(delta) + min;
+    return r;
+}
+
+void rgb_scale(tRGB * rgb, uint8_t scale)
 {
     uint16_t scale_fixed = scale + 1;
     rgb->R = (((uint16_t)rgb->R) * scale_fixed) >> 8;
@@ -270,9 +317,127 @@ void scale_rgb(tRGB * rgb, uint8_t scale)
     rgb->B = (((uint16_t)rgb->B) * scale_fixed) >> 8;
 }
 
-void fadeToBlackBy( tRGB * leds, uint8_t num_leds, uint8_t fadeBy)
+void rgb_add(tRGB * src_rgb, tRGB add_rgb)
 {
-    for(int i = 0; i < num_leds; i++) { 
-        scale_rgb(&leds[i], 255 - fadeBy);
+    uint16_t sum;
+
+    sum = src_rgb->R + add_rgb.R;
+    if(sum > 255){
+        sum = 255;
     }
+    src_rgb->R = sum;
+
+    sum = src_rgb->G + add_rgb.G;
+    if(sum > 255){
+        sum = 255;
+    }
+    src_rgb->G = sum;
+
+    sum = src_rgb->B + add_rgb.B;
+    if(sum > 255){
+        sum = 255;
+    }
+    src_rgb->B = sum;
+}
+
+void rgb_or(tRGB * src_rgb, tRGB rgb)
+{
+    if(src_rgb->R < rgb.R){
+        src_rgb->R = rgb.R;
+    }
+
+    if(src_rgb->G < rgb.G){
+        src_rgb->G = rgb.G;
+    }
+
+    if(src_rgb->B < rgb.B){
+        src_rgb->B = rgb.B;
+    }
+}
+
+uint16_t beat8( uint16_t beats_per_minute_88, uint32_t timebase)
+{
+    return ((SYSTICK_get_tick() - timebase) * beats_per_minute_88 * 280) >> 16;
+}
+
+uint16_t beat16( uint16_t beats_per_minute, uint32_t timebase)
+{
+    // Convert simple 8-bit BPM's to full Q8.8 accum88's if needed
+    if( beats_per_minute < 256) beats_per_minute <<= 8;
+    return beat8(beats_per_minute, timebase);
+}
+
+uint8_t beatsin8( uint16_t beats_per_minute, uint8_t lowest, uint8_t highest, uint32_t timebase, uint8_t phase_offset)
+{
+    uint8_t beat = beat16( beats_per_minute, timebase) >> 8;
+    uint8_t beatsin = sin8( beat + phase_offset);
+    uint8_t rangewidth = highest - lowest;
+    uint8_t scaledbeat = scale8( beatsin, rangewidth);
+    uint8_t result = lowest + scaledbeat;
+    return result;
+}
+
+uint16_t beatsin16( uint16_t beats_per_minute, uint16_t lowest, uint16_t highest, uint32_t timebase, uint16_t phase_offset)
+{
+    uint16_t beat = beat16( beats_per_minute, timebase);
+    uint16_t beatsin = (sin16( beat + phase_offset) + 32768);
+    uint16_t rangewidth = highest - lowest;
+    uint16_t scaledbeat = scale16( beatsin, rangewidth);
+    uint16_t result = lowest + scaledbeat;
+    return result;
+}
+
+uint8_t sin8( uint8_t theta)
+{
+    const uint8_t b_m16_interleave[] = { 0, 49, 49, 41, 90, 27, 117, 10 };
+
+    uint8_t offset = theta;
+    if( theta & 0x40 ) {
+        offset = (uint8_t)255 - offset;
+    }
+    offset &= 0x3F; // 0..63
+
+    uint8_t secoffset  = offset & 0x0F; // 0..15
+    if( theta & 0x40) secoffset++;
+
+    uint8_t section = offset >> 4; // 0..3
+    uint8_t s2 = section * 2;
+    const uint8_t* p = b_m16_interleave;
+    p += s2;
+    uint8_t b   =  *p;
+    p++;
+    uint8_t m16 =  *p;
+
+    uint8_t mx = (m16 * secoffset) >> 4;
+
+    int8_t y = mx + b;
+    if( theta & 0x80 ) y = -y;
+
+    y += 128;
+
+    return y;
+}
+
+int16_t sin16( uint16_t theta )
+{
+    static const uint16_t base[] =
+    { 0, 6393, 12539, 18204, 23170, 27245, 30273, 32137 };
+    static const uint8_t slope[] =
+    { 49, 48, 44, 38, 31, 23, 14, 4 };
+
+    uint16_t offset = (theta & 0x3FFF) >> 3; // 0..2047
+    if( theta & 0x4000 ) offset = 2047 - offset;
+
+    uint8_t section = offset / 256; // 0..7
+    uint16_t b   = base[section];
+    uint8_t  m   = slope[section];
+
+    uint8_t secoffset8 = (uint8_t)(offset) / 2;
+
+    uint16_t mx = m * secoffset8;
+    int16_t  y  = mx + b;
+
+    if( theta & 0x8000 ) y = -y;
+
+    return y;
 }

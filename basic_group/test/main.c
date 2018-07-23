@@ -19,5 +19,12 @@ int main(void)
     while (true){
         // VIDEO_cylon();
         // VIDEO_fill_from_palette(PaletteRainbowColors_p);
+    	// VIDEO_rainbow(7);
+    	// VIDEO_confetti();
+    	// VIDEO_sinelon();
+    	// VIDEO_bpm();
+    	// VIDEO_juggle();
+    	// VIDEO_fire();
+    	VIDEO_fire_palette();
     }
 }

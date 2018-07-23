@@ -4,6 +4,7 @@
 
 #include "nrf.h"
 #include "led.h"
+#include "systick.h"
 
 
 static const tRGB PaletteHeatColors_p[] = {
@@ -127,12 +128,27 @@ typedef enum eBlendType{
 } tBlendType;
 
 
+void fadeToBlackBy( tRGB * leds, uint8_t num_leds, uint8_t fadeBy);
+void addGlitter(uint8_t chanceOfGlitter, tRGB color);
 tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlendType blendType);
 void hsv2rgb(const tHSV * hsv, tRGB * rgb);
-static inline uint8_t scale8( uint8_t i, uint8_t scale) { return ((int)i * (int)(scale) ) >> 8; }
-static inline uint8_t scale8_video( uint8_t i, uint8_t scale) { uint8_t j = (((int)i * (int)scale) >> 8) + ((i&&scale)?1:0); return j; }
-void scale_rgb(tRGB * rgb, uint8_t scale);
-void fadeToBlackBy( tRGB * leds, uint8_t num_leds, uint8_t fadeBy);
+uint8_t qadd8( uint8_t i, uint8_t j);
+uint8_t qsub8( uint8_t i, uint8_t j);
+static inline uint8_t  scale8( uint8_t i, uint8_t scale) { return (((uint16_t)i) * (1+(uint16_t)(scale))) >> 8; }
+static inline uint16_t scale16(uint16_t i, uint16_t scale) { return (uint16_t)(((uint32_t)(i) * (1+(uint32_t)(scale))) / 65536); };
+static inline uint8_t  scale8_video( uint8_t i, uint8_t scale) { uint8_t j = (((int)i * (int)scale) >> 8) + ((i&&scale)?1:0); return j; }
+uint8_t random8(void);
+uint8_t random8_1(uint8_t lim);
+uint8_t random8_2(uint8_t min, uint8_t lim);
+void rgb_scale(tRGB * rgb, uint8_t scale);
+void rgb_add(tRGB * src_rgb, tRGB add_rgb);
+void rgb_or(tRGB * src_rgb, tRGB rgb);
+uint16_t beat8( uint16_t beats_per_minute_88, uint32_t timebase);
+uint16_t beat16( uint16_t beats_per_minute, uint32_t timebase);
+uint8_t  beatsin8( uint16_t beats_per_minute, uint8_t lowest, uint8_t highest, uint32_t timebase, uint8_t phase_offset);
+uint16_t beatsin16( uint16_t beats_per_minute, uint16_t lowest, uint16_t highest, uint32_t timebase, uint16_t phase_offset);
+uint8_t sin8( uint8_t theta);
+int16_t sin16( uint16_t theta );
 
 
 #endif
