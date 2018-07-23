@@ -29,6 +29,8 @@ SRC_FILES += \
   $(SDK_ROOT)/external/fprintf/nrf_fprintf_format.c \
   \
   $(PROJ_DIR)/led.c \
+  $(PROJ_DIR)/video.c \
+  $(PROJ_DIR)/fastled.c \
   $(PROJ_DIR)/systick.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_pwm.c \
   $(SDK_ROOT)/components/libraries/util/app_error.c \

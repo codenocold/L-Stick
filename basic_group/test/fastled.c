@@ -1,7 +1,6 @@
 #include "fastled.h"
 
 
-
 #define K255 255
 #define K171 171
 #define K170 170
@@ -261,4 +260,19 @@ void hsv2rgb(const tHSV * hsv, tRGB * rgb)
     rgb->R = r;
     rgb->G = g;
     rgb->B = b;
+}
+
+void scale_rgb(tRGB * rgb, uint8_t scale)
+{
+    uint16_t scale_fixed = scale + 1;
+    rgb->R = (((uint16_t)rgb->R) * scale_fixed) >> 8;
+    rgb->G = (((uint16_t)rgb->G) * scale_fixed) >> 8;
+    rgb->B = (((uint16_t)rgb->B) * scale_fixed) >> 8;
+}
+
+void fadeToBlackBy( tRGB * leds, uint8_t num_leds, uint8_t fadeBy)
+{
+    for(int i = 0; i < num_leds; i++) { 
+        scale_rgb(&leds[i], 255 - fadeBy);
+    }
 }

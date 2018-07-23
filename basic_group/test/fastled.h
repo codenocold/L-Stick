@@ -3,6 +3,7 @@
 
 
 #include "nrf.h"
+#include "led.h"
 
 
 static const tRGB PaletteHeatColors_p[] = {
@@ -126,17 +127,12 @@ typedef enum eBlendType{
 } tBlendType;
 
 
-
-static inline uint8_t scale8( uint8_t i, uint8_t scale)
-{
-    return ((int)i * (int)(scale) ) >> 8;
-}
-
-static inline uint8_t scale8_video( uint8_t i, uint8_t scale)
-{
-	uint8_t j = (((int)i * (int)scale) >> 8) + ((i&&scale)?1:0);
-	return j;
-}
+tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlendType blendType);
+void hsv2rgb(const tHSV * hsv, tRGB * rgb);
+static inline uint8_t scale8( uint8_t i, uint8_t scale) { return ((int)i * (int)(scale) ) >> 8; }
+static inline uint8_t scale8_video( uint8_t i, uint8_t scale) { uint8_t j = (((int)i * (int)scale) >> 8) + ((i&&scale)?1:0); return j; }
+void scale_rgb(tRGB * rgb, uint8_t scale);
+void fadeToBlackBy( tRGB * leds, uint8_t num_leds, uint8_t fadeBy);
 
 
 #endif

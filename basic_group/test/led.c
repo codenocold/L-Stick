@@ -1,13 +1,13 @@
 #include "led.h"
 
 
+#define WS2812B_PIN	    	   	11
+#define WS2812B_BITS_PER_LED   	24  
+
 // Timing Definitions
 #define LOGIC_ONE       (14 + 0x8000)
 #define LOGIC_ZERO      (6  + 0x8000)
-#define LOGIC_RESET     (0  + 0x8000)  
-
-#define WS2812B_PIN	    	   	11
-#define WS2812B_BITS_PER_LED   	24  
+#define LOGIC_RESET     (0  + 0x8000)
 
 
 static nrfx_pwm_t m_pwm0 = NRFX_PWM_INSTANCE(0);
@@ -91,7 +91,7 @@ void LED_setColorRGB(tRGB rgb, uint8_t index, bool isShow)
     }
 }
 
-void LED_update(void)
+void LED_show(void)
 {
     uint32_t grb;
 
@@ -101,10 +101,7 @@ void LED_update(void)
             seq1_values[offset++] = (grb & (1 << bit)) ? LOGIC_ONE : LOGIC_ZERO;
         }
     }
-}
 
-void LED_show(void)
-{
     // Wait for last operation
     while(!nrfx_pwm_is_stopped(&m_pwm0)){
     }

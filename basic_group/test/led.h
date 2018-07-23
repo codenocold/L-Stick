@@ -27,7 +27,6 @@ extern tRGB gLED[LED_NUM];
 
 void LED_init(void);
 void LED_setColorRGB(tRGB rgb, uint8_t index, bool isShow);
-void LED_update(void);
 void LED_show(void);
 
 
