@@ -128,7 +128,8 @@ typedef enum eBlendType{
 } tBlendType;
 
 
-void fadeToBlackBy( tRGB * leds, uint8_t num_leds, uint8_t fadeBy);
+void stepToWhiteBy(tRGB * leds, uint8_t num_leds, uint8_t fadeBy);
+void fadeToBlackBy(tRGB * leds, uint8_t num_leds, uint8_t fadeBy);
 void addGlitter(uint8_t chanceOfGlitter, tRGB color);
 tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlendType blendType);
 void hsv2rgb(const tHSV * hsv, tRGB * rgb);
@@ -140,7 +141,7 @@ __STATIC_INLINE uint8_t  scale8_video( uint8_t i, uint8_t scale) { uint8_t j = (
 uint8_t random8(void);
 uint8_t random8_1(uint8_t lim);
 uint8_t random8_2(uint8_t min, uint8_t lim);
-void rgb_scale(tRGB * rgb, uint8_t scale);
+void rgb_scale(tRGB * rgb, uint16_t scale);
 void rgb_nscale(tRGB * rgb, uint8_t num, uint8_t scale);
 void rgb_add(tRGB * src_rgb, tRGB add_rgb);
 void rgb_or(tRGB * src_rgb, tRGB rgb);

@@ -22,8 +22,10 @@ typedef enum eChargState{
 
 
 void POWER_init(void);
+uint8_t POWER_battery_level(void);
 __STATIC_INLINE void POWER_lock(void){nrf_gpio_pin_set(POWER_LOCK_PIN);}
 __STATIC_INLINE void POWER_unlock(void){nrf_gpio_pin_clear(POWER_LOCK_PIN);}
+__STATIC_INLINE uint32_t POWER_is_locked(void){return nrf_gpio_pin_out_read(POWER_LOCK_PIN);}
 __STATIC_INLINE tChargState POWER_get_charg_state(void){
 	tChargState state;
 	if(nrf_gpio_pin_read(CHRG_STATE_PIN) && nrf_gpio_pin_read(CHRG_STDBY_PIN)){

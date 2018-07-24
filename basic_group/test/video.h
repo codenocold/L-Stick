@@ -4,8 +4,6 @@
 
 #include "nrf.h"
 #include "led.h"
-#include "fastled.h"
-#include "systick.h"
 
 
 void VIDEO_cylon(void);

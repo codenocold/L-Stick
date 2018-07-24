@@ -34,6 +34,7 @@ SRC_FILES += \
   $(PROJ_DIR)/storage.c \
   $(PROJ_DIR)/power.c \
   $(PROJ_DIR)/video.c \
+  $(PROJ_DIR)/state_ctrl.c \
   $(PROJ_DIR)/fastled.c \
   $(PROJ_DIR)/systick.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_pwm.c \

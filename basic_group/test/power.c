@@ -22,6 +22,7 @@ static void saadc_callback(nrfx_saadc_evt_t const * p_event);
 static void saadc_init(void);
 static void saadc_sampling_event_init(void);
 static void saadc_sampling_event_enable(void);
+static uint8_t millivolt_2_percent(const uint16_t mvolts);
 
 
 void POWER_init(void)
@@ -40,6 +41,10 @@ void POWER_init(void)
     saadc_sampling_event_enable();
 }
 
+uint8_t POWER_battery_level(void)
+{
+    return millivolt_2_percent(gBatteryMilivolt);
+}
 
 static void timer_handler(nrf_timer_event_t event_type, void * p_context)
 {
@@ -143,4 +148,46 @@ static void saadc_sampling_event_enable(void)
 
     err_code = nrfx_ppi_channel_enable(m_ppi_channel);
     APP_ERROR_CHECK(err_code);
+}
+
+/****************************************************************************************
+ * @brief Function for converting the input voltage (in milli volts) into percentage of 3.0 Volts.
+ *
+ * @details The calculation is based on a linearized version of the battery's discharge
+ *           curve. 3.0V returns 100% battery level. The limit for power failure is 2.1V and
+ *           is considered to be the lower boundary.
+ *
+ *           The discharge curve for CR2032 is non-linear. In this model it is split into
+ *           4 linear sections:
+ *           - Section 1: 4.2V - 3.7V = 100% - 50% (50% drop on 500 mV)
+ *           - Section 2: 3.7V - 3.5V = 50% - 15% (35% drop on 200 mV)
+ *           - Section 3: 3.5V - 3.3V = 15% - 5% (10% drop on 200 mV)
+ *           - Section 4: 3.3V - 2.8V = 5% - 0% (5% drop on 500 mV)
+ *
+ *           These numbers are by no means accurate. Temperature and
+ *           load in the actual application is not accounted for!
+ *
+ * @param[in] mvolts The voltage in mV
+ *
+ * @return    Battery level in percent.
+***************************************************************************************/
+static uint8_t millivolt_2_percent(const uint16_t mvolts)
+{
+    uint8_t battery_level;
+
+    if (mvolts >= 4200){
+        battery_level = 100;
+    }else if (mvolts > 3700){
+        battery_level = 100 - ((4200 - mvolts) * 50) / 500;
+    }else if (mvolts > 3500){
+        battery_level = 50 - ((3700 - mvolts) * 35) / 200;
+    }else if (mvolts > 3300){
+        battery_level = 15 - ((3500 - mvolts) * 10) / 200;
+    }else if (mvolts > 2800){
+        battery_level = 5 - ((3300 - mvolts) * 5) / 500;
+    }else{
+        battery_level = 0;
+    }
+
+    return battery_level;
 }

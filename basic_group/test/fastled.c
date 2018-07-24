@@ -9,6 +9,13 @@
 // Function Declarations
 
 
+void stepToWhiteBy(tRGB * leds, uint8_t num_leds, uint8_t stepBy)
+{
+    for(int i = 0; i < num_leds; i++) { 
+        rgb_scale(&leds[i], 255 + stepBy);
+    }
+}
+
 void fadeToBlackBy( tRGB * leds, uint8_t num_leds, uint8_t fadeBy)
 {
     for(int i = 0; i < num_leds; i++) { 
@@ -309,7 +316,7 @@ uint8_t random8_2(uint8_t min, uint8_t lim)
     return r;
 }
 
-void rgb_scale(tRGB * rgb, uint8_t scale)
+void rgb_scale(tRGB * rgb, uint16_t scale)
 {
     uint16_t scale_fixed = scale + 1;
     rgb->R = (((uint16_t)rgb->R) * scale_fixed) >> 8;

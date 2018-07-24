@@ -1,4 +1,6 @@
 #include "video.h"
+#include "dwt.h"
+#include "fastled.h"
 
 
 //----------------------------------------------------------------------------------
@@ -12,18 +14,11 @@ static uint8_t mHue = 0;
 // Function Declarations
 
 
-#define UPDATES_PER_SECOND(Hz) {    \
-    static uint32_t tick = 0;       \
-    if(SYSTICK_get_ms_since(tick) < 1000/Hz){   \
-        return;                     \
-    }                               \
-    tick = SYSTICK_get_tick();      \
-}
-
-
 void VIDEO_cylon(void)
 {
-    UPDATES_PER_SECOND(100);
+    if(!DWT_is_timeout_us(0, 100000)){
+        return;
+    }
 
     mHue ++;
 
@@ -43,7 +38,9 @@ void VIDEO_cylon(void)
 
 void VIDEO_fill_from_palette(const tRGB * pal)
 {
-    UPDATES_PER_SECOND(100);
+    if(!DWT_is_timeout_us(0, 100000)){
+        return;
+    }
 
     uint8_t index = mHue ++;
     for( int i = 0; i < LED_NUM; i++) {
@@ -56,7 +53,9 @@ void VIDEO_fill_from_palette(const tRGB * pal)
 
 void VIDEO_rainbow(uint8_t deltahue)
 {
-    UPDATES_PER_SECOND(100);
+    if(!DWT_is_timeout_us(0, 100000)){
+        return;
+    }
 
     tHSV hsv = {mHue ++, 255, 255};
     for(int i = 0; i < LED_NUM; i++) {
@@ -69,7 +68,9 @@ void VIDEO_rainbow(uint8_t deltahue)
 
 void VIDEO_confetti(void)
 {
-    UPDATES_PER_SECOND(100);
+    if(!DWT_is_timeout_us(0, 100000)){
+        return;
+    }
 
     rgb_nscale(gLED, LED_NUM, 240);
 
@@ -85,7 +86,9 @@ void VIDEO_confetti(void)
 
 void VIDEO_sinelon(void)
 {
-    UPDATES_PER_SECOND(100);
+    if(!DWT_is_timeout_us(0, 100000)){
+        return;
+    }
 
     fadeToBlackBy(gLED, LED_NUM, 20);
 
@@ -101,7 +104,9 @@ void VIDEO_sinelon(void)
 
 void VIDEO_bpm(void)
 {
-    UPDATES_PER_SECOND(100);
+    if(!DWT_is_timeout_us(0, 100000)){
+        return;
+    }
 
     mHue ++;
     uint8_t beat = beatsin8( 62, 64, 255, 0, 0);
@@ -115,7 +120,9 @@ void VIDEO_bpm(void)
 
 void VIDEO_juggle(void)
 {
-    UPDATES_PER_SECOND(100);
+    if(!DWT_is_timeout_us(0, 100000)){
+        return;
+    }
 
     fadeToBlackBy(gLED, LED_NUM, 20);
 
@@ -181,7 +188,9 @@ void VIDEO_fire(void)
 {
     static bool gReverseDirection = false;
 
-    UPDATES_PER_SECOND(60);
+    if(!DWT_is_timeout_us(0, 60000)){
+        return;
+    }
 
     // Array of temperature readings at each simulation cell
     static uint8_t heat[LED_NUM];
@@ -224,7 +233,9 @@ void VIDEO_fire_whith_palette(const tRGB * pal)
 {
     static bool gReverseDirection = false;
 
-    UPDATES_PER_SECOND(60);
+    if(!DWT_is_timeout_us(0, 60000)){
+        return;
+    }
 
     // Array of temperature readings at each simulation cell
     static uint8_t heat[LED_NUM];

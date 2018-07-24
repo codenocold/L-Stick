@@ -11,6 +11,10 @@
 #include "key.h"
 #include "power.h"
 #include "storage.h"
+#include "state_ctrl.h"
+
+
+static void key_loop(void);
 
 
 int main(void)
@@ -28,8 +32,6 @@ int main(void)
 
     ACCEL_power_up();
 
-    NRF_LOG_INFO("mode %d", G_ModeIndex);
-
     while (true){
         // VIDEO_cylon();
         // VIDEO_fill_from_palette(PaletteRainbowStripeColors_p);
@@ -41,11 +43,42 @@ int main(void)
     	// VIDEO_fire();
     	// VIDEO_fire_whith_palette(PaletteHeatColors_p);
 
-        uint8_t key = KEY_scan();
-        if(key){
-            NRF_LOG_INFO("key %d", key);
-            G_ModeIndex = key;
-            STORAGE_deinit();
-        }
+        key_loop();
+    }
+}
+
+
+static void key_loop(void)
+{
+    switch(KEY_scan()){
+        case 1:     // Click
+            if(POWER_is_locked()){
+                //LIGHT_MODE_index_next();
+            }
+            break;
+
+        case 2:     // Double click
+            if(POWER_is_locked()){
+                //LIGHT_MODE_index_prev();
+            }
+            break;
+
+        case 3:     // Triple click
+
+            break;
+
+        case 255:   // Long press
+            if(POWER_is_locked()){
+                // Power off
+                STATE_CTRL_set_state(STATE_POWER_DOWN);
+            }else{
+                // Power on
+                POWER_lock();
+                STATE_CTRL_set_state(STATE_POWER_UP);
+            }
+            break;
+
+        default:
+            break;
     }
 }
