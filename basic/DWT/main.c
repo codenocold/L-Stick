@@ -22,12 +22,9 @@ void DWT_init(void)
     DWT->CTRL = val | DWT_CTRL_CYCCNTENA_Msk;
 }
 
-/*****************************************************************************
- * @bref    DWT_init
- * @param   none
- * @retval  none
- *****************************************************************************/
-static inline uint32_t DWT_get_tick(void){return DWT->CYCCNT;}
+__STATIC_INLINE uint32_t DWT_get_tick(void){return DWT->CYCCNT;}
+
+__STATIC_INLINE uint32_t DWT_get_us_since(uint32_t t){return (DWT->CYCCNT - t);}
 
 
 /**

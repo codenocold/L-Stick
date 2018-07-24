@@ -50,7 +50,7 @@ void ACCEL_loop(void);
  * @param   none
  * @retval  Accel activ state
 *****************************************************************************/
-static inline int32_t ACCEL_is_activ(void){return !nrf_gpio_pin_read(ACCEL_INT2);}
+__STATIC_INLINE int32_t ACCEL_is_activ(void){return !nrf_gpio_pin_read(ACCEL_INT2);}
 
 /****************************************************************************
  * @bref        Function for write reg value

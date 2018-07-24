@@ -134,13 +134,14 @@ tRGB ColorFromPalette( const tRGB *pal, uint8_t index, uint8_t brightness, tBlen
 void hsv2rgb(const tHSV * hsv, tRGB * rgb);
 uint8_t qadd8( uint8_t i, uint8_t j);
 uint8_t qsub8( uint8_t i, uint8_t j);
-static inline uint8_t  scale8( uint8_t i, uint8_t scale) { return (((uint16_t)i) * (1+(uint16_t)(scale))) >> 8; }
-static inline uint16_t scale16(uint16_t i, uint16_t scale) { return (uint16_t)(((uint32_t)(i) * (1+(uint32_t)(scale))) / 65536); };
-static inline uint8_t  scale8_video( uint8_t i, uint8_t scale) { uint8_t j = (((int)i * (int)scale) >> 8) + ((i&&scale)?1:0); return j; }
+__STATIC_INLINE uint8_t  scale8( uint8_t i, uint8_t scale) { return (((uint16_t)i) * (1+(uint16_t)(scale))) >> 8; }
+__STATIC_INLINE uint16_t scale16(uint16_t i, uint16_t scale) { return (uint16_t)(((uint32_t)(i) * (1+(uint32_t)(scale))) / 65536); };
+__STATIC_INLINE uint8_t  scale8_video( uint8_t i, uint8_t scale) { uint8_t j = (((int)i * (int)scale) >> 8) + ((i&&scale)?1:0); return j; }
 uint8_t random8(void);
 uint8_t random8_1(uint8_t lim);
 uint8_t random8_2(uint8_t min, uint8_t lim);
 void rgb_scale(tRGB * rgb, uint8_t scale);
+void rgb_nscale(tRGB * rgb, uint8_t num, uint8_t scale);
 void rgb_add(tRGB * src_rgb, tRGB add_rgb);
 void rgb_or(tRGB * src_rgb, tRGB rgb);
 uint16_t beat8( uint16_t beats_per_minute_88, uint32_t timebase);

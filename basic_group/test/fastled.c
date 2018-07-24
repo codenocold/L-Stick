@@ -317,6 +317,13 @@ void rgb_scale(tRGB * rgb, uint8_t scale)
     rgb->B = (((uint16_t)rgb->B) * scale_fixed) >> 8;
 }
 
+void rgb_nscale(tRGB * rgb, uint8_t num, uint8_t scale)
+{
+    for(int i=0; i<num; i++){
+        rgb_scale(&rgb[i], scale);
+    }
+}
+
 void rgb_add(tRGB * src_rgb, tRGB add_rgb)
 {
     uint16_t sum;

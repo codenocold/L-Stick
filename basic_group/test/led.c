@@ -72,32 +72,14 @@ void LED_init(void)
 	}
 }
 
-void LED_setColorRGB(tRGB rgb, uint8_t index, bool isShow)
-{
-    if((index >= LED_NUM)){
-        return;
-    }
-
-    int offset   = index * WS2812B_BITS_PER_LED;
-
-    uint32_t grb = (rgb.G << 16) | (rgb.R << 8) | (rgb.B);
-
-    for (int bit = (WS2812B_BITS_PER_LED - 1); bit >= 0; --bit) {
-        seq1_values[offset++] = (grb & (1 << bit)) ? LOGIC_ONE : LOGIC_ZERO;
-    }
-
-    if (isShow){
-        LED_show();
-    }
-}
-
 void LED_show(void)
 {
     uint32_t grb;
+    uint32_t offset = 0;
 
-    for(int offset=0; offset < (LED_NUM * WS2812B_BITS_PER_LED); ){
-        grb = *((uint32_t*)(gLED + offset / WS2812B_BITS_PER_LED));
-        for (int bit = (WS2812B_BITS_PER_LED - 1); bit >= 0; --bit){
+    for(int i=0; i<LED_NUM; i++){
+        grb = (gLED[i].G << 16) | (gLED[i].R << 8) | (gLED[i].B);
+        for(int bit = (WS2812B_BITS_PER_LED - 1); bit >= 0; --bit) {
             seq1_values[offset++] = (grb & (1 << bit)) ? LOGIC_ONE : LOGIC_ZERO;
         }
     }

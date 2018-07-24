@@ -12,7 +12,13 @@ static uint8_t mHue = 0;
 // Function Declarations
 
 
-#define UPDATES_PER_SECOND(Hz) { static uint32_t tick = 0; if(SYSTICK_get_ms_since(tick) < 1000/Hz){return;} tick = SYSTICK_get_tick(); }
+#define UPDATES_PER_SECOND(Hz) {    \
+    static uint32_t tick = 0;       \
+    if(SYSTICK_get_ms_since(tick) < 1000/Hz){   \
+        return;                     \
+    }                               \
+    tick = SYSTICK_get_tick();      \
+}
 
 
 void VIDEO_cylon(void)
@@ -20,27 +26,29 @@ void VIDEO_cylon(void)
     UPDATES_PER_SECOND(100);
 
     mHue ++;
+
 	mCnt += mInc;
+    if(mCnt >= LED_NUM){
+        mInc = -1;
+    }else if(mCnt < 0){
+        mInc = +1;
+    }
+
     tHSV hsv = {mHue, 255, 255};
     hsv2rgb(&hsv, &gLED[mCnt]);
-    LED_show();
-    fadeToBlackBy(gLED, LED_NUM, 10);
+    fadeToBlackBy(gLED, LED_NUM, 20);
 
-    if(mCnt >= LED_NUM){
-    	mInc = -1;
-    }else if(mCnt < 0){
-    	mInc = +1;
-    }
+    LED_show();
 }
 
 void VIDEO_fill_from_palette(const tRGB * pal)
 {
     UPDATES_PER_SECOND(100);
 
-    uint8_t hue = mHue++;
+    uint8_t index = mHue ++;
     for( int i = 0; i < LED_NUM; i++) {
-        gLED[i] = ColorFromPalette(pal, hue, 255, LINEARBLEND);
-        hue += 3;
+        gLED[i] = ColorFromPalette(pal, index, 255, LINEARBLEND);
+        index += 3;
     }
 
     LED_show();
@@ -50,7 +58,7 @@ void VIDEO_rainbow(uint8_t deltahue)
 {
     UPDATES_PER_SECOND(100);
 
-    tHSV hsv = {mHue++, 255, 255};
+    tHSV hsv = {mHue ++, 255, 255};
     for(int i = 0; i < LED_NUM; i++) {
         hsv2rgb(&hsv, &gLED[i]);
         hsv.H += deltahue;
@@ -63,15 +71,12 @@ void VIDEO_confetti(void)
 {
     UPDATES_PER_SECOND(100);
 
-    for( int i = 0; i < LED_NUM; i++) {
-        rgb_scale(&gLED[i], 240);
-    }
+    rgb_nscale(gLED, LED_NUM, 240);
 
     if(mCnt ++ > 20){
         mCnt = 0;
         int pos = random8() % LED_NUM;
-        tHSV hsv = {0, 200, 255};
-        hsv.H = random8();
+        tHSV hsv = {random8(), 200, 255};
         hsv2rgb(&hsv, &gLED[pos]);
     }
 
@@ -84,10 +89,10 @@ void VIDEO_sinelon(void)
 
     fadeToBlackBy(gLED, LED_NUM, 20);
 
-    int pos = beatsin16(13, 0, 16-1, 0, 0);
+    int pos = beatsin16(13, 0, LED_NUM-1, 0, 0);
 
     tRGB rgb;
-    tHSV hsv = {mHue++, 255, 255};
+    tHSV hsv = {mHue ++, 255, 255};
     hsv2rgb(&hsv, &rgb);
     rgb_add(&gLED[pos], rgb);
 
@@ -129,12 +134,12 @@ void VIDEO_juggle(void)
 // COOLING: How much does the air cool as it rises?
 // Less cooling = taller flames.  More cooling = shorter flames.
 // Default 50, suggested range 20-100 
-#define COOLING  55
+#define COOLING  30
 
 // SPARKING: What chance (out of 255) is there that a new spark will be lit?
 // Higher chance = more roaring fire.  Lower chance = more flickery fire.
 // Default 120, suggested range 50-200.
-#define SPARKING 100
+#define SPARKING 170
 
 tRGB HeatColor(uint8_t temperature)
 {
@@ -215,7 +220,7 @@ void VIDEO_fire(void)
     LED_show();
 }
 
-void VIDEO_fire_palette(void)
+void VIDEO_fire_whith_palette(const tRGB * pal)
 {
     static bool gReverseDirection = false;
 
@@ -243,7 +248,7 @@ void VIDEO_fire_palette(void)
     // Step 4.  Map from heat cells to LED colors
     for(int j = 0; j < LED_NUM; j++) {
         uint8_t colorindex = scale8( heat[j], 240);
-        tRGB color = ColorFromPalette(PaletteHeatColors_p, colorindex, 255, LINEARBLEND);
+        tRGB color = ColorFromPalette(pal, colorindex, 255, LINEARBLEND);
 
         int pixelnumber;
 

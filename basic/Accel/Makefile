@@ -32,7 +32,6 @@ SRC_FILES += \
   $(PROJ_DIR)/LIS3DH/lis3dh_driver.c \
   $(SDK_ROOT)/components/libraries/twi_mngr/nrf_twi_mngr.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_twi.c \
-  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_gpiote.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twi.c \
   $(SDK_ROOT)/components/libraries/queue/nrf_queue.c \
   $(SDK_ROOT)/components/libraries/util/app_error.c \

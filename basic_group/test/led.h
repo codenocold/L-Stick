@@ -10,9 +10,9 @@
 
 
 typedef struct sRGB{
-	uint8_t B;		// Blue
     uint8_t R;		// Red
     uint8_t G;		// Green
+    uint8_t B;		// Blue
 }tRGB;
 
 typedef struct sHSV{
@@ -26,7 +26,6 @@ extern tRGB gLED[LED_NUM];
 
 
 void LED_init(void);
-void LED_setColorRGB(tRGB rgb, uint8_t index, bool isShow);
 void LED_show(void);
 
 

@@ -29,12 +29,29 @@ SRC_FILES += \
   $(SDK_ROOT)/external/fprintf/nrf_fprintf_format.c \
   \
   $(PROJ_DIR)/led.c \
+  $(PROJ_DIR)/dwt.c \
+  $(PROJ_DIR)/key.c \
+  $(PROJ_DIR)/storage.c \
+  $(PROJ_DIR)/power.c \
   $(PROJ_DIR)/video.c \
   $(PROJ_DIR)/fastled.c \
   $(PROJ_DIR)/systick.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_pwm.c \
   $(SDK_ROOT)/components/libraries/util/app_error.c \
   $(SDK_ROOT)/components/libraries/util/app_error_weak.c \
+  $(PROJ_DIR)/accel.c \
+  $(PROJ_DIR)/LIS3DH/lis3dh_driver.c \
+  $(SDK_ROOT)/components/libraries/twi_mngr/nrf_twi_mngr.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_twi.c \
+  $(SDK_ROOT)/components/libraries/queue/nrf_queue.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_ppi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_saadc.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_timer.c \
+  $(SDK_ROOT)/components/libraries/strerror/nrf_strerror.c \
+  $(SDK_ROOT)/components/libraries/fstorage/nrf_fstorage.c \
+  $(SDK_ROOT)/components/libraries/fstorage/nrf_fstorage_nvmc.c \
+  $(SDK_ROOT)/modules/nrfx/hal/nrf_nvmc.c \
 
 
 # Include folders common to all targets
@@ -59,6 +76,12 @@ INC_FOLDERS += \
   \
   $(SDK_ROOT)/modules/nrfx/hal/ \
   $(SDK_ROOT)/modules/nrfx/drivers/include/ \
+  $(PROJ_DIR)/LIS3DH \
+  $(SDK_ROOT)/components/libraries/twi_mngr \
+  $(SDK_ROOT)/components/libraries/queue \
+  $(SDK_ROOT)/components/libraries/fstorage \
+  $(SDK_ROOT)/integration/nrfx/legacy \
+  $(SDK_ROOT)/modules/nrfx/drivers/include \
 
 
 # Libraries common to all targets

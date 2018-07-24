@@ -16,7 +16,7 @@ void VIDEO_sinelon(void);
 void VIDEO_bpm(void);
 void VIDEO_juggle(void);
 void VIDEO_fire(void);
-void VIDEO_fire_palette(void);
+void VIDEO_fire_whith_palette(const tRGB * pal);
 
 
 #endif

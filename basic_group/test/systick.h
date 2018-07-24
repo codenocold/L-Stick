@@ -21,20 +21,14 @@ void SYSTICK_init(void);
  * @param   none
  * @retval  A tick value
 **************************************************************************************/
-__STATIC_INLINE uint32_t SYSTICK_get_tick(void)
-{
-    return G_Tick;
-}
+__STATIC_INLINE uint32_t SYSTICK_get_tick(void){return G_Tick;}
 
 /**************************************************************************************
  * @bref        Calculate time in milliseconds since a previous time
  * @param[in]   t: previous tick value
  * @retval      time in us since previous time t.
 **************************************************************************************/
-__STATIC_INLINE uint32_t SYSTICK_get_ms_since(uint32_t t)
-{
-    return (G_Tick - t);
-}
+__STATIC_INLINE uint32_t SYSTICK_get_ms_since(uint32_t t){return (G_Tick - t);}
 
 
 #endif

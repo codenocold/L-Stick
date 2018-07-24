@@ -23,8 +23,8 @@ int main(void)
     	NRF_LOG_INFO("ACCEL_init ok");
     }
 
+    int cnt = 0;
     bool isActiv = false;
-
     while (true){
         ACCEL_loop();
 
@@ -38,6 +38,11 @@ int main(void)
                 isActiv = false;
                 NRF_LOG_INFO("Inactiv");
             }
+        }
+
+        if(cnt ++ > 100000){
+            cnt = 0;
+            NRF_LOG_INFO("x %d, y %d, z %d", gAccelRaw_x, gAccelRaw_y, gAccelRaw_z);
         }
     }
 }
