@@ -14,9 +14,9 @@ volatile tModeTable DefaultModeTable __attribute__ ((section(".mode_table"))) = 
 		LM_VIDEO_6,			// 6
         LM_VIDEO_7,			// 7
         LM_VIDEO_8,			// 8
-        LM_NULL,			// 9
-        LM_NULL,			// 10
-        LM_NULL,			// 11
+        LM_BIKE_0,			// 9
+        LM_STATIC_LIGHT_0,			// 10
+        LM_STATIC_LIGHT_1,			// 11
         LM_NULL,			// 12
         LM_NULL,			// 13
         LM_NULL,			// 14
@@ -26,41 +26,12 @@ volatile tModeTable DefaultModeTable __attribute__ ((section(".mode_table"))) = 
 
 volatile tStaticLight DefaultStaticLight __attribute__ ((section(".static_light"))) = {
 	{
-	    {
-	        .R=50,
-	        .G=0,
-	        .B=0,
-	    },
-
-	    {
-	        .R=0,
-	        .G=50,
-	        .B=0,
-	    },
-
-	    {
-	        .R=0,
-	        .G=0,
-	        .B=50,
-	    },
-
-	    {
-	        .R=50,
-	        .G=50,
-	        .B=0,
-	    },
-
-	    {
-	        .R=50,
-	        .G=0,
-	        .B=50,
-	    },
-
-	    {
-	        .R=0,
-	        .G=50,
-	        .B=50,
-	    },
+	    {50,0,0,},
+	    {0,50,0,},
+	    {0,0,50,},
+	    {50,50,0,},
+	    {0,50,50,},
+	    {50,0,50,},
 	}
 };
 

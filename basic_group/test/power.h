@@ -15,6 +15,7 @@ extern volatile uint16_t gBatteryMilivolt;
 
 
 typedef enum eChargState{
+	CHARG_STATE_NULL,
 	CHARG_STATE_NO_CHARGER,
 	CHARG_STATE_CHARGING,
 	CHARG_STATE_CHARG_COMPLETE,
@@ -27,7 +28,7 @@ __STATIC_INLINE void POWER_lock(void){nrf_gpio_pin_set(POWER_LOCK_PIN);}
 __STATIC_INLINE void POWER_unlock(void){nrf_gpio_pin_clear(POWER_LOCK_PIN);}
 __STATIC_INLINE uint32_t POWER_is_locked(void){return nrf_gpio_pin_out_read(POWER_LOCK_PIN);}
 __STATIC_INLINE tChargState POWER_get_charg_state(void){
-	tChargState state;
+	tChargState state = CHARG_STATE_NULL;
 	if(nrf_gpio_pin_read(CHRG_STATE_PIN) && nrf_gpio_pin_read(CHRG_STDBY_PIN)){
 	    // No Charger
 	    state = CHARG_STATE_NO_CHARGER;

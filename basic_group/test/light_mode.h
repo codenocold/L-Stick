@@ -57,8 +57,6 @@ typedef enum eLightMode{
 }tLightMode;
 
 
-void LIGHT_MODE_set_index(int32_t index);
-int32_t LIGHT_MODE_get_index(void);
 void LIGHT_MODE_index_prev(void);
 void LIGHT_MODE_index_next(void);
 void LIGHT_MODE_loop(void);

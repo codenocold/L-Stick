@@ -6,7 +6,15 @@
 #include <stdbool.h>
 
 
-#define DWT_TICK_NUM	3
+enum DWT_TICKS{
+	DWT_TICK_MAIN_LOOP = 0,
+	DWT_TICK_CHARGER_LOOP,
+	DWT_TICK_BIKE_LOOP,
+	DWT_TICK_ACCEL_SWITCH_LOOP,
+
+	DWT_TICK_NUM,
+};
+
 
 
 extern uint32_t gDwtTickArray[DWT_TICK_NUM];

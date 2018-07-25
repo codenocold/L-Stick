@@ -14,6 +14,7 @@
 #define ACCEL_SDA_PIN             27    // SDA signal pin
 
 
+extern volatile int16_t gAccelEnableCnt;
 extern volatile int16_t gAccelRaw_x, gAccelRaw_y, gAccelRaw_z;
 
 
@@ -23,6 +24,8 @@ extern volatile int16_t gAccelRaw_x, gAccelRaw_y, gAccelRaw_z;
  * @ retval     0: Success -1: Error
 ******************************************************************/
 int32_t ACCEL_init(void);
+
+bool ACCEL_is_enable(void);
 
 /*****************************************************************
  * @ bref       ACCEL_power_up

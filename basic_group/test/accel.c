@@ -18,7 +18,9 @@ static const nrf_drv_twi_config_t twi_mngr_config = {
        .hold_bus_uninit    = false
     };
 
+volatile int16_t gAccelEnableCnt = 0;
 volatile int16_t gAccelRaw_x, gAccelRaw_y, gAccelRaw_z;
+static bool mIsAccelEnabled = false;
 
 
 //----------------------------------------------------------------------------------
@@ -132,6 +134,11 @@ int32_t ACCEL_init(void)
     return 0;
 }
 
+bool ACCEL_is_enable(void)
+{
+    return mIsAccelEnabled;
+}
+
 /*****************************************************************
  * @ bref       ACCEL_power_up
  * @ param      none
@@ -146,6 +153,8 @@ int32_t ACCEL_power_up(void)
     if(response == MEMS_ERROR){
         return -1;
     }
+
+    mIsAccelEnabled = true;
 
     return 0;
 }
@@ -167,6 +176,8 @@ int32_t ACCEL_power_down(void)
     if(response == MEMS_ERROR){
         return -1;
     }
+
+    mIsAccelEnabled = false;
 
     return 0;
 }

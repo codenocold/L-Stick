@@ -12,6 +12,7 @@
 #include "power.h"
 #include "storage.h"
 #include "state_ctrl.h"
+#include "light_mode.h"
 
 
 static void key_loop(void);
@@ -29,8 +30,6 @@ int main(void)
     KEY_init(SYSTICK_get_tick);
     POWER_init();
     STORAGE_init();
-
-    //ACCEL_power_up();
 
     while (true){
         key_loop();
@@ -55,7 +54,7 @@ static void key_loop(void)
             break;
 
         case 3:     // Triple click
-            STATE_CTRL_set_state(STATE_POWER_ON_CHARG);
+            STATE_CTRL_set_state(STATE_OFF_CHARG_COMPLETE);
             break;
 
         case 255:   // Long press

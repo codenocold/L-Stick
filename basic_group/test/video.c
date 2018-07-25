@@ -16,7 +16,7 @@ static uint8_t mHue = 0;
 
 void VIDEO_cylon(void)
 {
-    if(!DWT_is_timeout_us(0, 10000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 10000)){
         return;
     }
 
@@ -38,7 +38,7 @@ void VIDEO_cylon(void)
 
 void VIDEO_fill_from_palette(const tRGB * pal)
 {
-    if(!DWT_is_timeout_us(0, 10000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 10000)){
         return;
     }
 
@@ -53,7 +53,7 @@ void VIDEO_fill_from_palette(const tRGB * pal)
 
 void VIDEO_rainbow(uint8_t deltahue)
 {
-    if(!DWT_is_timeout_us(0, 10000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 10000)){
         return;
     }
 
@@ -68,7 +68,7 @@ void VIDEO_rainbow(uint8_t deltahue)
 
 void VIDEO_confetti(void)
 {
-    if(!DWT_is_timeout_us(0, 10000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 10000)){
         return;
     }
 
@@ -86,7 +86,7 @@ void VIDEO_confetti(void)
 
 void VIDEO_sinelon(void)
 {
-    if(!DWT_is_timeout_us(0, 10000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 10000)){
         return;
     }
 
@@ -104,7 +104,7 @@ void VIDEO_sinelon(void)
 
 void VIDEO_bpm(void)
 {
-    if(!DWT_is_timeout_us(0, 10000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 10000)){
         return;
     }
 
@@ -120,7 +120,7 @@ void VIDEO_bpm(void)
 
 void VIDEO_juggle(void)
 {
-    if(!DWT_is_timeout_us(0, 10000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 10000)){
         return;
     }
 
@@ -188,7 +188,7 @@ void VIDEO_fire(void)
 {
     static bool gReverseDirection = false;
 
-    if(!DWT_is_timeout_us(0, 16000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 16000)){
         return;
     }
 
@@ -233,7 +233,7 @@ void VIDEO_fire_whith_palette(const tRGB * pal)
 {
     static bool gReverseDirection = false;
 
-    if(!DWT_is_timeout_us(0, 16000)){
+    if(!DWT_is_timeout_us(DWT_TICK_MAIN_LOOP, 16000)){
         return;
     }
 

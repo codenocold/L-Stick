@@ -3,26 +3,18 @@
 #include "storage.h"
 #include "video.h"
 #include "fastled.h"
+#include "bike_disp.h"
+#include "accel.h"
 
 
 //----------------------------------------------------------------------------------
 // Varable Definitions
+static uint32_t mLightModeStep;
 
 
 //----------------------------------------------------------------------------------
 // Function Declarations
 
-
-void LIGHT_MODE_set_index(int32_t index)
-{
-    G_ModeIndex = index;
-    STATE_CTRL_set_state(STATE_LIGHT_MODE_INDICATE);
-}
-
-int32_t LIGHT_MODE_get_index(void)
-{
-    return G_ModeIndex;
-}
 
 void LIGHT_MODE_index_prev(void)
 {
@@ -36,7 +28,8 @@ void LIGHT_MODE_index_prev(void)
     }else{
         G_ModeIndex --;
     }
-    
+
+    mLightModeStep = 0;
     STATE_CTRL_set_state(STATE_LIGHT_MODE_INDICATE);
 }
 
@@ -51,12 +44,85 @@ void LIGHT_MODE_index_next(void)
         }
     }
     
+    mLightModeStep = 0;
     STATE_CTRL_set_state(STATE_LIGHT_MODE_INDICATE);
 }
 
 void LIGHT_MODE_loop(void)
 {
+    static bool isUseAccel = false;
+    static tLightMode LastLightMode = LM_NULL;
+
+    // Light mode change event
+    if(G_pModeTable->table[G_ModeIndex] != LastLightMode){
+        LastLightMode = G_pModeTable->table[G_ModeIndex];
+        
+        if(isUseAccel){
+            isUseAccel = false;
+            gAccelEnableCnt --;
+        }
+    }
+
     switch(G_pModeTable->table[G_ModeIndex]){
+        case LM_STATIC_LIGHT_0:
+            if(mLightModeStep == 0){
+                mLightModeStep ++;
+                setLEDs(gLED, LED_NUM, G_pStaticLight->color[0].R, G_pStaticLight->color[0].G, G_pStaticLight->color[0].B);
+                LED_show();
+            }
+            break;
+
+        case LM_STATIC_LIGHT_1:
+            if(mLightModeStep == 0){
+                mLightModeStep ++;
+                setLEDs(gLED, LED_NUM, G_pStaticLight->color[1].R, G_pStaticLight->color[1].G, G_pStaticLight->color[1].B);
+                LED_show();
+            }
+            break;
+
+        case LM_STATIC_LIGHT_2:
+            if(mLightModeStep == 0){
+                mLightModeStep ++;
+                setLEDs(gLED, LED_NUM, G_pStaticLight->color[2].R, G_pStaticLight->color[2].G, G_pStaticLight->color[2].B);
+                LED_show();
+            }
+            break;
+
+        case LM_STATIC_LIGHT_3:
+            if(mLightModeStep == 0){
+                mLightModeStep ++;
+                setLEDs(gLED, LED_NUM, G_pStaticLight->color[3].R, G_pStaticLight->color[3].G, G_pStaticLight->color[3].B);
+                LED_show();
+            }
+            break;
+
+        case LM_STATIC_LIGHT_4:
+            if(mLightModeStep == 0){
+                mLightModeStep ++;
+                setLEDs(gLED, LED_NUM, G_pStaticLight->color[4].R, G_pStaticLight->color[4].G, G_pStaticLight->color[4].B);
+                LED_show();
+            }
+            break;
+
+        case LM_STATIC_LIGHT_5:
+            if(mLightModeStep == 0){
+                mLightModeStep ++;
+                setLEDs(gLED, LED_NUM, G_pStaticLight->color[5].R, G_pStaticLight->color[5].G, G_pStaticLight->color[5].B);
+                LED_show();
+            }
+            break;
+
+        case LM_BIKE_0:
+            if(mLightModeStep == 0){
+                mLightModeStep ++;
+
+                // Enable Accel
+                isUseAccel = true;
+                gAccelEnableCnt ++;
+            }
+            BIKE_DISP_0();
+            break;
+
         case LM_VIDEO_0:
             VIDEO_cylon();
             break;
