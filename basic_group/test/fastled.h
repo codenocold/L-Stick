@@ -128,6 +128,7 @@ typedef enum eBlendType{
 } tBlendType;
 
 
+void setLEDs(tRGB * leds, uint8_t num_leds, uint8_t r, uint8_t g, uint8_t b);
 void stepToWhiteBy(tRGB * leds, uint8_t num_leds, uint8_t fadeBy);
 void fadeToBlackBy(tRGB * leds, uint8_t num_leds, uint8_t fadeBy);
 void addGlitter(uint8_t chanceOfGlitter, tRGB color);
@@ -144,6 +145,7 @@ uint8_t random8_2(uint8_t min, uint8_t lim);
 void rgb_scale(tRGB * rgb, uint16_t scale);
 void rgb_nscale(tRGB * rgb, uint8_t num, uint8_t scale);
 void rgb_add(tRGB * src_rgb, tRGB add_rgb);
+void rgb_sub(tRGB * src_rgb, tRGB sub_rgb);
 void rgb_or(tRGB * src_rgb, tRGB rgb);
 uint16_t beat8( uint16_t beats_per_minute_88, uint32_t timebase);
 uint16_t beat16( uint16_t beats_per_minute, uint32_t timebase);

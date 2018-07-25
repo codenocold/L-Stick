@@ -9,6 +9,15 @@
 // Function Declarations
 
 
+void setLEDs(tRGB * leds, uint8_t num_leds, uint8_t r, uint8_t g, uint8_t b)
+{
+    for(int i=0; i<num_leds; i++){
+        gLED[i].R = r;
+        gLED[i].G = g;
+        gLED[i].B = b;
+    }
+}
+
 void stepToWhiteBy(tRGB * leds, uint8_t num_leds, uint8_t stepBy)
 {
     for(int i = 0; i < num_leds; i++) { 
@@ -319,9 +328,19 @@ uint8_t random8_2(uint8_t min, uint8_t lim)
 void rgb_scale(tRGB * rgb, uint16_t scale)
 {
     uint16_t scale_fixed = scale + 1;
-    rgb->R = (((uint16_t)rgb->R) * scale_fixed) >> 8;
-    rgb->G = (((uint16_t)rgb->G) * scale_fixed) >> 8;
-    rgb->B = (((uint16_t)rgb->B) * scale_fixed) >> 8;
+    uint16_t r = (((uint16_t)rgb->R) * scale_fixed) >> 8;
+    uint16_t g = (((uint16_t)rgb->G) * scale_fixed) >> 8;
+    uint16_t b = (((uint16_t)rgb->B) * scale_fixed) >> 8;
+
+    if(scale_fixed > 0xFF){
+        if(rgb->R == r) r++;
+        if(rgb->G == g) g++;
+        if(rgb->B == b) b++;
+    }
+   
+    rgb->R = r > 255 ? 255 : r;
+    rgb->G = g > 255 ? 255 : g;
+    rgb->B = b > 255 ? 255 : b;
 }
 
 void rgb_nscale(tRGB * rgb, uint8_t num, uint8_t scale)
@@ -333,25 +352,16 @@ void rgb_nscale(tRGB * rgb, uint8_t num, uint8_t scale)
 
 void rgb_add(tRGB * src_rgb, tRGB add_rgb)
 {
-    uint16_t sum;
+    src_rgb->R = qadd8(src_rgb->R, add_rgb.R);
+    src_rgb->G = qadd8(src_rgb->G, add_rgb.G);
+    src_rgb->B = qadd8(src_rgb->B, add_rgb.B);
+}
 
-    sum = src_rgb->R + add_rgb.R;
-    if(sum > 255){
-        sum = 255;
-    }
-    src_rgb->R = sum;
-
-    sum = src_rgb->G + add_rgb.G;
-    if(sum > 255){
-        sum = 255;
-    }
-    src_rgb->G = sum;
-
-    sum = src_rgb->B + add_rgb.B;
-    if(sum > 255){
-        sum = 255;
-    }
-    src_rgb->B = sum;
+void rgb_sub(tRGB * src_rgb, tRGB sub_rgb)
+{
+    src_rgb->R = qsub8(src_rgb->R, sub_rgb.R);
+    src_rgb->G = qsub8(src_rgb->G, sub_rgb.G);
+    src_rgb->B = qsub8(src_rgb->B, sub_rgb.B);
 }
 
 void rgb_or(tRGB * src_rgb, tRGB rgb)
